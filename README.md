@@ -6,6 +6,10 @@ A browser-based implementation of the classic Ticket to Ride board game. Play so
 ![Platform](https://img.shields.io/badge/Platform-Web-blue)
 ![Players](https://img.shields.io/badge/Players-1--5-green)
 
+## Screenshot
+
+![Ticket to Ride Gameplay](screenshots/Ticket_to_ride_game.png)
+
 ## Features
 
 - **Full USA Map** - 36 cities and ~100 routes across America
