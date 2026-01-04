@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket to Ride - USA</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Setup Screen -->
+    <div id="setup-screen" class="screen">
+        <div class="setup-container">
+            <h1>Ticket to Ride</h1>
+            <h2>USA Edition</h2>
+
+            <div class="player-setup">
+                <h3>Game Setup</h3>
+                <div class="player-count">
+                    <label for="num-players">Number of Players:</label>
+                    <select id="num-players">
+                        <option value="2">2 Players</option>
+                        <option value="3">3 Players</option>
+                        <option value="4">4 Players</option>
+                        <option value="5">5 Players</option>
+                    </select>
+                </div>
+
+                <div id="player-config">
+                    <!-- Player configuration will be generated here -->
+                </div>
+
+                <button id="start-game" class="btn-primary">Start Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen hidden">
+        <!-- Top Bar: Game Info -->
+        <div id="top-bar">
+            <div id="game-info">
+                <span id="current-player-display">Current Player: --</span>
+                <span id="game-phase-display">Phase: Setup</span>
+                <span id="deck-count">Deck: 0</span>
+            </div>
+            <button id="game-log-toggle" class="btn-small">Game Log</button>
+        </div>
+
+        <!-- Main Game Area -->
+        <div id="game-container">
+            <!-- Left Sidebar: Player Scores -->
+            <div id="scoreboard">
+                <h3>Scoreboard</h3>
+                <div id="player-scores">
+                    <!-- Player scores will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Center: Game Board -->
+            <div id="board-area">
+                <canvas id="game-canvas"></canvas>
+            </div>
+
+            <!-- Right Sidebar: Actions + Destinations -->
+            <div id="action-panel">
+                <h3>Actions</h3>
+                <div id="action-buttons">
+                    <button id="btn-draw-cards" class="action-btn">Draw Train Cards</button>
+                    <button id="btn-claim-route" class="action-btn">Claim Route</button>
+                    <button id="btn-draw-destinations" class="action-btn">Draw Destinations</button>
+                </div>
+                <div id="action-status">
+                    <p id="action-message">Select an action</p>
+                </div>
+
+                <!-- Destination Tickets moved here -->
+                <div id="destination-tickets">
+                    <h4>Your Tickets</h4>
+                    <div id="ticket-list">
+                        <!-- Destination tickets will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom: Cards Row -->
+        <div id="bottom-panel">
+            <!-- Face-up Cards -->
+            <div id="face-up-cards">
+                <div id="face-up-card-slots">
+                    <!-- 5 face-up cards -->
+                </div>
+                <div id="deck-area">
+                    <div id="train-deck" class="card-deck">
+                        <span>Draw</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player's Hand -->
+            <div id="player-hand-area">
+                <div id="player-info">
+                    <span id="player-name-display">Your Hand</span>
+                    <span id="trains-remaining">Trains: 45</span>
+                </div>
+                <div id="hand-cards">
+                    <!-- Player's train cards will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Destination Ticket Selection -->
+    <div id="destination-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Choose Destination Tickets</h3>
+            <p id="destination-instruction">You must keep at least <span id="min-keep">2</span> ticket(s)</p>
+            <div id="destination-choices">
+                <!-- Destination ticket choices will be rendered here -->
+            </div>
+            <button id="confirm-destinations" class="btn-primary" disabled>Confirm Selection</button>
+        </div>
+    </div>
+
+    <!-- Modal: Route Claim Selection -->
+    <div id="route-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Claim Route</h3>
+            <p id="route-info">Select a route on the map</p>
+            <div id="route-details">
+                <!-- Route details will be shown here -->
+            </div>
+            <div id="card-selection">
+                <!-- Card selection for claiming route -->
+            </div>
+            <div class="modal-buttons">
+                <button id="confirm-route" class="btn-primary" disabled>Claim Route</button>
+                <button id="cancel-route" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Game Over -->
+    <div id="gameover-modal" class="modal hidden">
+        <div class="modal-content gameover-content">
+            <h2>Game Over!</h2>
+            <div id="final-scores">
+                <!-- Final scores will be rendered here -->
+            </div>
+            <div id="winner-announcement">
+                <!-- Winner announcement -->
+            </div>
+            <button id="play-again" class="btn-primary">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Game Log Panel -->
+    <div id="game-log-panel" class="hidden">
+        <div class="log-header">
+            <h3>Game Log</h3>
+            <button id="close-log" class="btn-small">Close</button>
+        </div>
+        <div id="log-content">
+            <!-- Game log entries will be rendered here -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/map-data.js"></script>
+    <script src="js/cards.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/scoring.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
