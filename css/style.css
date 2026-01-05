@@ -560,7 +560,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -577,6 +577,30 @@ body {
     overflow-y: auto;
 }
 
+/* Destination modal - positioned to show map */
+#destination-modal {
+    justify-content: flex-end;
+    align-items: flex-start;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    pointer-events: none;
+}
+
+#destination-modal .modal-content {
+    max-width: 280px;
+    max-height: 85vh;
+    margin-top: 50px;
+    margin-right: 10px;
+    pointer-events: auto;
+    padding: 15px;
+    font-size: 0.9em;
+}
+
+#destination-modal .modal-content h3 {
+    font-size: 1.1em;
+    margin-bottom: 8px;
+}
+
 .modal-content h3 {
     margin-bottom: 15px;
     color: var(--accent);
@@ -589,15 +613,21 @@ body {
     justify-content: flex-end;
 }
 
+#destination-instruction {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
 #destination-choices {
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 .destination-choice {
     display: flex;
     align-items: center;
-    padding: 15px;
-    margin: 10px 0;
+    padding: 10px 12px;
+    margin: 6px 0;
     background: var(--bg-tertiary);
     border-radius: 8px;
     cursor: pointer;
@@ -615,9 +645,9 @@ body {
 }
 
 .destination-choice input {
-    margin-right: 15px;
-    width: 20px;
-    height: 20px;
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
 }
 
 .destination-choice-info {
@@ -626,12 +656,13 @@ body {
 
 .destination-choice-cities {
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 .destination-choice-points {
     color: var(--text-secondary);
-    margin-top: 5px;
+    margin-top: 2px;
+    font-size: 0.9em;
 }
 
 /* Route Selection */

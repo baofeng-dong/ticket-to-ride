@@ -9,6 +9,9 @@ class GameUI {
         this.selectedCards = [];
         this.gameLog = [];
 
+        // Highlighted destination for hover effect
+        this.highlightedDestination = null;
+
         // Canvas dimensions
         this.width = 0;
         this.height = 0;
@@ -78,6 +81,7 @@ class GameUI {
         this.drawBackground();
         this.drawRoutes();
         this.drawCities();
+        this.drawHighlightedDestination();
         this.updateScoreboard();
         this.updatePlayerHand();
         this.updateFaceUpCards();
@@ -225,6 +229,72 @@ class GameUI {
         }
     }
 
+    // Draw highlighted destination (cities and connecting line)
+    drawHighlightedDestination() {
+        if (!this.highlightedDestination) return;
+
+        const { city1, city2 } = this.highlightedDestination;
+        const cityData1 = MAP_DATA.cities[city1];
+        const cityData2 = MAP_DATA.cities[city2];
+
+        if (!cityData1 || !cityData2) return;
+
+        const pos1 = this.toCanvasCoords(cityData1.x, cityData1.y);
+        const pos2 = this.toCanvasCoords(cityData2.x, cityData2.y);
+
+        // Draw dashed line connecting the two cities
+        this.ctx.beginPath();
+        this.ctx.setLineDash([8, 6]);
+        this.ctx.moveTo(pos1.x, pos1.y);
+        this.ctx.lineTo(pos2.x, pos2.y);
+        this.ctx.strokeStyle = '#ffeb3b';
+        this.ctx.lineWidth = 3;
+        this.ctx.stroke();
+        this.ctx.setLineDash([]);
+
+        // Draw highlighted city markers
+        this.drawHighlightedCity(city1, cityData1);
+        this.drawHighlightedCity(city2, cityData2);
+    }
+
+    // Draw a highlighted city marker
+    drawHighlightedCity(name, city) {
+        const pos = this.toCanvasCoords(city.x, city.y);
+
+        // Outer glow
+        this.ctx.beginPath();
+        this.ctx.arc(pos.x, pos.y, 18, 0, Math.PI * 2);
+        this.ctx.fillStyle = 'rgba(255, 235, 59, 0.4)';
+        this.ctx.fill();
+
+        // Bright ring
+        this.ctx.beginPath();
+        this.ctx.arc(pos.x, pos.y, 12, 0, Math.PI * 2);
+        this.ctx.strokeStyle = '#ffeb3b';
+        this.ctx.lineWidth = 3;
+        this.ctx.stroke();
+
+        // City dot
+        this.ctx.beginPath();
+        this.ctx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
+        this.ctx.fillStyle = '#ffeb3b';
+        this.ctx.fill();
+        this.ctx.strokeStyle = '#fff';
+        this.ctx.lineWidth = 2;
+        this.ctx.stroke();
+
+        // City name with background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        const textWidth = this.ctx.measureText(name).width;
+        this.ctx.fillRect(pos.x - textWidth / 2 - 4, pos.y - 28, textWidth + 8, 16);
+
+        this.ctx.fillStyle = '#ffeb3b';
+        this.ctx.font = 'bold 11px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'bottom';
+        this.ctx.fillText(name, pos.x, pos.y - 14);
+    }
+
     // Draw all cities
     drawCities() {
         for (const [name, city] of Object.entries(MAP_DATA.cities)) {
@@ -296,6 +366,9 @@ class GameUI {
 
     // Find route at mouse position
     findRouteAtPosition(x, y) {
+        let closestRoute = null;
+        let closestDist = Infinity;
+
         for (const route of MAP_DATA.routes) {
             // Skip claimed routes
             if (game?.claimedRoutes.some(cr => cr.routeId === route.id)) {
@@ -308,13 +381,30 @@ class GameUI {
             const start = this.toCanvasCoords(city1.x, city1.y);
             const end = this.toCanvasCoords(city2.x, city2.y);
 
-            // Calculate distance from point to line
-            const dist = this.pointToLineDistance(x, y, start.x, start.y, end.x, end.y);
-            if (dist < 15) {
-                return route;
+            // Calculate offset for parallel routes (same as in drawRoute)
+            let offsetX = 0, offsetY = 0;
+            if (route.parallel) {
+                const dx = end.x - start.x;
+                const dy = end.y - start.y;
+                const len = Math.sqrt(dx * dx + dy * dy);
+                offsetX = -dy / len * 6;
+                offsetY = dx / len * 6;
+            }
+
+            // Calculate distance from point to the offset line
+            const dist = this.pointToLineDistance(
+                x, y,
+                start.x + offsetX, start.y + offsetY,
+                end.x + offsetX, end.y + offsetY
+            );
+
+            // Track closest route within threshold
+            if (dist < 12 && dist < closestDist) {
+                closestDist = dist;
+                closestRoute = route;
             }
         }
-        return null;
+        return closestRoute;
     }
 
     // Calculate distance from point to line segment
@@ -536,6 +626,17 @@ class GameUI {
                 </div>
             `;
 
+            // Hover to highlight cities on map
+            choice.addEventListener('mouseenter', () => {
+                this.highlightedDestination = { city1: ticket.city1, city2: ticket.city2 };
+                this.render();
+            });
+
+            choice.addEventListener('mouseleave', () => {
+                this.highlightedDestination = null;
+                this.render();
+            });
+
             choice.addEventListener('click', (e) => {
                 if (e.target.type !== 'checkbox') {
                     const checkbox = choice.querySelector('input');
@@ -561,6 +662,8 @@ class GameUI {
         confirmBtn.onclick = () => {
             const kept = tickets.filter((_, i) => selected.has(i));
             const returned = tickets.filter((_, i) => !selected.has(i));
+            this.highlightedDestination = null;
+            this.render();
             modal.classList.add('hidden');
             callback(kept, returned);
         };
