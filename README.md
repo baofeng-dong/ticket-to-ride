@@ -99,6 +99,18 @@ ticket-to-ride/
 - **Vanilla JavaScript** - Game logic (no frameworks)
 - **CSS3** - Styling and animations
 
+## AI Strengths
+
+The AI opponent uses strategic decision-making with Dijkstra's pathfinding algorithm.
+
+| Strength | How It Works |
+|----------|--------------|
+| **Path Optimization** | Dijkstra finds shortest routes between destination cities |
+| **Blocking Awareness** | Detects bottleneck routes that might be taken by opponents |
+| **Resource Management** | Saves locomotive (wild) cards for when they're needed most |
+| **Adaptive Strategy** | Re-plans routes dynamically when paths get blocked |
+| **Risk Assessment** | Evaluates destination ticket feasibility before committing |
+
 ## License
 
 This is a fan-made implementation for educational purposes. Ticket to Ride is a trademark of Days of Wonder, Inc.
